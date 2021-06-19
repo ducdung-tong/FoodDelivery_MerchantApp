@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">FoodDelivery_MerchantApp</string>
+    <string name="hello">Xin chào</string>
+    <string name="highlands_coffee">Highlands Coffee</string>
+    <string name="store">Cửa hàng</string>
+    <string name="order">Đơn hàng</string>
+    <string name="setting">Cài đặt</string>
+    <string name="statistic">Thống kê</string>
+    <string name="list_product">Danh sách các món</string>
+    <string name="add_product">Thêm món mới</string>
+    <string name="delete_product">Xóa món</string>
+    <string name="product_name">Tên món (VN)</string>
+    <string name="product_name_en">Tên món (ENG)</string>
+    <string name="product_description">Mô tả</string>
+    <string name="product_size">Size: Ví dụ S, M, L</string>
+    <string name="product_price">Giá (VNĐ): Ví dụ 39000, 49000, 59000</string>
+    <string name="finish_title">HOÀN TẤT</string>
+    <string name="product_list">DANH SÁCH MÓN</string>
+    <string name="price">\"Giá: \"</string>
+    <string name="vnd">VNĐ</string>
+    <string name="vnd_with_appro">\"VNĐ ~ \"</string>
+    <string name="search_for">Tìm kiếm...</string>
+    <string name="pls_enter_product_name">Vui lòng nhập tên món</string>
+    <string name="pls_enter_product_size">Vui lòng điền size của món, tối thiểu 1</string>
+    <string name="login_account">ĐĂNG NHẬP</string>
+    <string name="login">ĐĂNG NHẬP</string>
+    <string name="login_">Đăng nhập</string>
+    <string name="email">Email</string>
+    <string name="password">Mật khẩu</string>
+    <string name="pls_enter_email">Vui lòng điền email</string>
+    <string name="wrong_email_format">Sai định dạng email</string>
+    <string name="please_enter_pass">Vui lòng điền mật khẩu</string>
+    <string name="email_pass_not_correct">Email hoặc mật khẩu không đúng!</string>
+    <string name="pls_enter_product_price">Vui lòng nhập size của món, tối thiểu 1</string>
+    <string name="size_eqal_price">Số lượng size và số lượng giá phải trùng nhau</string>
+    <string name="kind">Phân loại</string>
+    <string name="food">Thức ăn</string>
+    <string name="choose_more">Thêm hình ảnh</string>
+    <string name="updating_info">Đang cập nhật thông tin…</string>
+    <string name="pls_choose_main_image">Vui lòng chọn 1 ảnh chính trước</string>
+    <string name="update_success">Cập nhật sản phẩm thành công!</string>
+    <string name="loading">Đang tải...</string>
+    <string name="adding_info">Đang thêm thông tin món</string>
+    <string-array name="type">
+        <item>Thức uống</item>
+        <item>Thức ăn</item>
+    </string-array>
+</resources>

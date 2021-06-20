@@ -3,15 +3,14 @@ package com.group4.fooddelivery_merchantapp.model;
 import android.net.Uri;
 
 public class ProductImage {
-    String extension;
     String type;
     String id;
-    Uri uri;
+    String uri;
 
     public ProductImage() {
     }
 
-    public ProductImage(String type, String id, Uri uri) {
+    public ProductImage(String type, String id, String uri) {
         this.type = type;
         this.id = id;
         this.uri = uri;
@@ -33,11 +32,19 @@ public class ProductImage {
         this.id = id;
     }
 
-    public Uri getUri() {
+    public String getUri() {
         return uri;
     }
 
-    public void setUri(Uri uri) {
+    public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public ProductImage clone() {
+        ProductImage image = new ProductImage();
+        image.id = this.id;
+        image.uri = this.uri;
+        image.type = this.type;
+        return  image;
     }
 }

@@ -41,6 +41,10 @@
     <string name="update_success">Cập nhật sản phẩm thành công!</string>
     <string name="loading">Đang tải...</string>
     <string name="adding_info">Đang thêm thông tin món</string>
+    <string name="update_question">CẬP NHẬT THÔNG TIN?</string>
+    <string name="update_details">Bạn có muốn thay đổi thông tin?\nThông tin sau khi thay đổi sẽ không thể hoàn tác</string>
+    <string name="delete_title">XÓA THÔNG TIN MÓN</string>
+    <string name="delete_details">Bạn có muốn xóa món khỏi danh sách của bạn?\nMón sau khi xóa sẽ không thể hoàn tác</string>
     <string-array name="type">
         <item>Thức uống</item>
         <item>Thức ăn</item>

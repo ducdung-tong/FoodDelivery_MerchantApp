@@ -74,7 +74,7 @@ public class ModifiedFirebase {
                             Log.e("Firebasse", "img" + document.getId());
                             if (document == null)
                                 break;
-                            img.setUri(Uri.parse((String) document.get("Image_Link")));
+                            img.setUri(document.get("Image_Link").toString());
                             img.setId(document.getId());
                             img.setType(document.get("Type").toString());
                             images.add(img);

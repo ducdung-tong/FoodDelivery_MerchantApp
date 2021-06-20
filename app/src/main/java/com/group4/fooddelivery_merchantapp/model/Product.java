@@ -17,6 +17,7 @@ public class Product {
     private ArrayList<String> Price;
     private ArrayList<String> Size;
     private ArrayList<ProductImage> Image;
+    private ProductImage MainImage;
     private String Sales;
     private String Create;
 
@@ -24,6 +25,7 @@ public class Product {
         Price = new ArrayList<>();
         Size = new ArrayList<>();
         Image = new ArrayList<>();
+        MainImage = new ProductImage();
     };
 
     public Product(String ID, String name, String name_En, String merchant, String rating, String status, ArrayList<String> price, ArrayList<String> size, ArrayList<ProductImage> image, String sales, String create) {
@@ -126,5 +128,13 @@ public class Product {
 
     public void setCreate(String create) {
         Create = create;
+    }
+
+    public ProductImage getMainImage() {
+        return MainImage;
+    }
+
+    public void setMainImage(ProductImage mainImage) {
+        MainImage = mainImage;
     }
 }

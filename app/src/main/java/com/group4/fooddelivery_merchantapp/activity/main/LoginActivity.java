@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.e("Firebasse", "img" + document.getId());
                             if (document == null)
                                 break;
-                            img.setUri(Uri.parse((String) document.get("Image_Link")));
+                            img.setUri(document.get("Image_Link").toString());
                             img.setId(document.getId());
                             images.add(img);
                         }

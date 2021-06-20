@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.group4.fooddelivery_merchantapp.R;
+import com.group4.fooddelivery_merchantapp.activity.main.WelcomeActivity;
+import com.group4.fooddelivery_merchantapp.activity.store.EditProductActivity;
+import com.group4.fooddelivery_merchantapp.model.Product;
 import com.group4.fooddelivery_merchantapp.model.ProductImage;
 
 import java.util.ArrayList;
@@ -18,7 +21,6 @@ import java.util.ArrayList;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
     Context context;
-    ArrayList<ProductImage> imageList;
     public ArrayList<ProductImage> tempImageList;
 
     public ImageAdapter() {
@@ -68,7 +70,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         }
 
         public void removeAt(int position) {
-            tempImageList.remove(position);
+            tempImageList.remove(position + 1);
             notifyItemChanged(position);
             notifyItemRangeRemoved(position, tempImageList.size());
         }

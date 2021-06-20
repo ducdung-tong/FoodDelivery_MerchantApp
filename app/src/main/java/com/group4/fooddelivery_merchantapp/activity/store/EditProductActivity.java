@@ -1,13 +1,17 @@
 package com.group4.fooddelivery_merchantapp.activity.store;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.webkit.MimeTypeMap;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -15,7 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,12 +64,12 @@ public class EditProductActivity extends AppCompatActivity {
 
     FirebaseFirestore root;
     StorageReference storage;
+    FirebaseStorage mStorage;
     String docRef;
     String collectionPath = "Product/";
     Product product;
     int Position;
     ArrayList<String> price, size;
-    ArrayList<ProductImage> images;
     ArrayList<ProductImage> tempImages;
 
     String[] types;
@@ -87,14 +91,14 @@ public class EditProductActivity extends AppCompatActivity {
 
         Init();
 
-        images = new ArrayList<>();
         tempImages = new ArrayList<>();
 
-        images.addAll(product.getImage());
-        tempImages.addAll(product.getImage());
+        for (ProductImage image : product.getImage()) {
+            tempImages.add(image.clone());
+        }
 
         if (product.getImage().size() > 0)
-            Glide.with(EditProductActivity.this).load(product.getImage().get(0).getUri()).into(iv_image);
+            Glide.with(EditProductActivity.this).load(tempImages.get(0).getUri()).into(iv_image);
         ImageAdapter imageAdapter = new ImageAdapter(EditProductActivity.this, tempImages);
         LinearLayoutManager imageManager = new LinearLayoutManager(EditProductActivity.this, RecyclerView.HORIZONTAL, false);
         list_Image.setLayoutManager(imageManager);
@@ -140,6 +144,7 @@ public class EditProductActivity extends AppCompatActivity {
 
         root = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance().getReference();
+        mStorage = FirebaseStorage.getInstance();
 
         choosenType = getResources().getString(R.string.food);
 
@@ -159,7 +164,7 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkRequirement()) {
-                    updateProdcut();
+                    openConfirmDialog();
                 }
             }
         });
@@ -177,6 +182,53 @@ public class EditProductActivity extends AppCompatActivity {
                 choosenType = parent.getItemAtPosition(position).toString();
             }
         });
+    }
+
+    private void openConfirmDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog);
+
+        Window window = dialog.getWindow();
+
+        if (window == null) {
+            return;
+        }
+
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowsAttribute = window.getAttributes();
+        windowsAttribute.gravity = Gravity.CENTER;
+        window.setAttributes(windowsAttribute);
+
+        dialog.setCancelable(false);
+
+
+        Button bt_cancel = dialog.findViewById(R.id.dialog_cancel);
+        Button bt_yes = dialog.findViewById(R.id.dialog_yes);
+        TextView tv_title = dialog.findViewById(R.id.dialog_title);
+        TextView tv_details = dialog.findViewById(R.id.dialog_details);
+
+        tv_title.setText(R.string.update_question);
+        tv_details.setText(R.string.update_details);
+
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        bt_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                updateProdcut();
+            }
+        });
+
+        dialog.show();
     }
 
     private void openFile() {
@@ -198,7 +250,7 @@ public class EditProductActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
             mImageUri = data.getData();
             Glide.with(EditProductActivity.this).load(mImageUri).into(iv_image);
-            tempImages.get(0).setUri(mImageUri);
+            tempImages.get(0).setUri(mImageUri.toString());
         } else if (requestCode == PICK_MULTIPLE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             if (data.getClipData() != null) {
                 int count = data.getClipData().getItemCount();
@@ -207,7 +259,7 @@ public class EditProductActivity extends AppCompatActivity {
                 } else {
                     for (int i = 0; i < count; i++) {
                         tempImages.add(new ProductImage(
-                                "subsidiary", "", data.getClipData().getItemAt(i).getUri()
+                                "subsidiary", "", data.getClipData().getItemAt(i).getUri().toString()
                         ));
                     }
                     loadMultipleImage();
@@ -236,7 +288,6 @@ public class EditProductActivity extends AppCompatActivity {
         info.put("Create", new Date().toString());
         String[] prices = et_price.getText().toString().split("\\s*,\\s*");
         String[] sizes = et_size.getText().toString().split("\\s*,\\s*");
-        WelcomeActivity.firebase.productList.get(Position).setName(et_name.getText().toString());
         price = new ArrayList<>(Arrays.asList(prices));
         size = new ArrayList<>(Arrays.asList(sizes));
         info.put("Size", size);
@@ -251,75 +302,94 @@ public class EditProductActivity extends AppCompatActivity {
                         updateImage();
                     }
                 });
-
     }
 
     private void updateImage() {
-        removeImage();
+        removeOldImage();
         addNewImage();
     }
 
-    private void removeImage() {
-        for (ProductImage image : images) {
-            root.collection("Product/" + product.getID() + "/Photos/")
-                    .document(image.getId())
-                    .delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+    private void removeOldImage() {
+        for (ProductImage image : product.getImage()) {
+            boolean delete = true;
+            for (ProductImage temp : tempImages) {
+                if (temp.getUri().equals(image.getUri())) {
+                    delete = false;
+                    break;
+                }
+            }
+            if (delete) {
+                root.collection("Product/" + product.getID() + "/Photos/")
+                        .document(image.getId())
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.e("IMG", "Remove from firestore: " + image.getId());
+                                mStorage.getReferenceFromUrl(image.getUri())
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.e("IMG", "Remove from storage: " + image.getId());
+                                            }
+                                        });
+                            }
+                        });
+            }
+        }
+    }
+
+    private void addNewImage() {
+        if (tempImages.get(0).getUri().contains("firebasestorage")) {
+            addMultipleImage();
+        } else {
+            Map<String, String> type = new HashMap<>();
+            type.put("Type", "main");
+            root.collection("Product/" + product.getID() +
+                    "/Photos/")
+                    .add(type)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.e("IMG", "Remove images");
-                            StorageReference fileRef = storage.child("ProductImage/" + WelcomeActivity.firebase.merchantId + "/" + product.getID() + "/" + image.getId() + "." + getExtension(image.getUri()));
-                            Log.e("IMG", image.getUri().toString());
-                            Log.e("IMG", fileRef.getPath());
-                            fileRef.delete()
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.e("IMG", "Remove images storage");
-                                        }
-                                    });
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.e("IMG", "Add main");
+                            tempImages.get(0).setId(documentReference.getId());
+                            tempImages.get(0).setType("main");
+                            uploadImage(tempImages.get(0));
                         }
                     });
         }
     }
 
-    private void addNewImage() {
-        Map<String, String> type = new HashMap<>();
-        type.put("Type", "main");
-        root.collection("Product/" + product.getID() +
-                "/Photos/")
-                .add(type)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.e("IMG", "Add main");
-                        uploadImage(tempImages.get(0).getUri(), documentReference.getId(), "main");
-                    }
-                });
-    }
-
     private void addMultipleImage() {
         if (tempImages.size() == 1) {
+            Log.e("refresh", "3");
             refreshProduct();
         } else {
             for (ProductImage image : tempImages) {
                 if (image.getType().equals("main"))
                     continue;
+                if (image.getUri().contains("firebasestorage")) {
+                    if (image == tempImages.get(tempImages.size() - 1)) {
+                        Log.e("refresh", "2");
+                        refreshProduct();
+                    }
+                } else {
+                    Map<String, String> type = new HashMap<>();
+                    type.put("Type", "subsidiary");
 
-                Map<String, String> type = new HashMap<>();
-                type.put("Type", "subsidiary");
-                root.collection("Product/" + product.getID() + "/Photos")
-                        .add(type)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.e("IMG", "subsidiary");
-                                uploadImage(image.getUri(), documentReference.getId(), "subsidiary");
-                                if (image == tempImages.get(tempImages.size() - 1)) {
-                                    refreshProduct();
+                    root.collection("Product/" + product.getID() + "/Photos")
+                            .add(type)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.e("IMG", "subsidiary");
+                                    image.setType("subsidiary");
+                                    image.setId(documentReference.getId());
+                                    uploadImage(image);
                                 }
-                            }
-                        });
+                            });
+                }
             }
         }
     }
@@ -341,10 +411,10 @@ public class EditProductActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadImage(Uri uri, String id, String type) {
+    private void uploadImage(ProductImage p) {
         StorageReference fileRef = storage.child("ProductImage/" + WelcomeActivity.firebase.merchantId
-                + "/" + product.getID() + "/" + id);
-        fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                + "/" + product.getID() + "/" + p.getId());
+        fileRef.putFile(Uri.parse(p.getUri())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -352,29 +422,28 @@ public class EditProductActivity extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         Log.e("IMG", "Add to storage");
                         Map<String, String> image = new HashMap<>();
-                        image.put("Type", type);
+                        image.put("Type", p.getType());
                         image.put("Image_Link", uri.toString());
                         image.put("Upload_Time", new Timestamp(new Date()).toString());
                         root.collection(collectionPath + product.getID() + "/Photos/")
-                                .document(id)
+                                .document(p.getId())
                                 .set(image)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        if (type.equals("main"))
+                                        if (p.getType().equals("main"))
                                             addMultipleImage();
+                                        if (p == tempImages.get(tempImages.size() - 1)
+                                                && !p.getType().equals("main")) {
+                                            Log.e("refresh", "1");
+                                            refreshProduct();
+                                        }
                                     }
                                 });
                     }
                 });
             }
         });
-    }
-
-    private String getExtension(Uri mImageUri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(contentResolver.getType(mImageUri));
     }
 
     private void goBack() {

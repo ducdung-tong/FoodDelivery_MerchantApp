@@ -15,6 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".activity.order.OrderDetailActivity"></activity>
+        <activity android:name=".activity.order.SucceededOrderActivity" />
+        <activity android:name=".activity.order.DeliveringOrderActivity" />
+        <activity android:name=".activity.order.ConfirmedOrderActivity" />
+        <activity android:name=".activity.order.PendingOrderActivity" />
+        <activity android:name=".activity.order.OrderActivity" />
         <activity android:name=".activity.main.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

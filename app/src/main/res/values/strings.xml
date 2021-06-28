@@ -45,6 +45,26 @@
     <string name="update_details">Bạn có muốn thay đổi thông tin?\nThông tin sau khi thay đổi sẽ không thể hoàn tác</string>
     <string name="delete_title">XÓA THÔNG TIN MÓN</string>
     <string name="delete_details">Bạn có muốn xóa món khỏi danh sách của bạn?\nMón sau khi xóa sẽ không thể hoàn tác</string>
+    <string name="pending_order">Đơn hàng đang chờ</string>
+    <string name="confirmed_order">Đơn hàng đã nhận</string>
+    <string name="delivering_order">Đơn hàng đang giao</string>
+    <string name="succeeded_order">Đơn hàng thành công</string>
+    <string name="no_data">Không có dữ liệu mới!</string>
+    <string name="detail">Chi tiết</string>
+    <string name="items">sản phẩm</string>
+    <string name="customer_label">Khách hàng:</string>
+    <string name="phone_number_label">Số điện thoại:</string>
+    <string name="address_label">Địa chỉ:</string>
+    <string name="expect_time_label">Giao vào:</string>
+    <string name="order_detail">Chi tiết đơn hàng</string>
+    <string name="subtotal_label">Tạm tính</string>
+    <string name="discount_label">Giảm giá</string>
+    <string name="total_label">Tổng cộng</string>
+    <string name="shipping_cost_label">Phí vận chuyển</string>
+    <string name="confirm_order">Nhận đơn</string>
+    <string name="deliver_order">Giao hàng</string>
+    <string name="order_success">Thành công</string>
+    <string name="moved_order_next_state">Thay đổi trạng thái đơn hàng thành công!</string>
     <string-array name="type">
         <item>Thức uống</item>
         <item>Thức ăn</item>

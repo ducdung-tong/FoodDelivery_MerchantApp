@@ -61,7 +61,7 @@
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/main_tv_name"
                     app:layout_constraintTop_toTopOf="@+id/main_tv_hello"
-                    app:srcCompat="@drawable/logo" />
+                    app:srcCompat="@drawable/logo"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,8 +84,7 @@
                     android:layout_marginBottom="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/banner" />
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
@@ -282,6 +281,17 @@
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/main_tv_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/logout"
+                android:textColor="#1e4368"
+                android:textSize="14sp"
+                android:textStyle="italic" />
 
 <!--            <LinearLayout-->
 <!--                android:layout_width="match_parent"-->

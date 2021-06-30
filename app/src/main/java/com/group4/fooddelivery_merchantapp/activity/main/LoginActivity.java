@@ -3,6 +3,7 @@ package com.group4.fooddelivery_merchantapp.activity.main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,27 +26,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.group4.fooddelivery_merchantapp.R;
+import com.group4.fooddelivery_merchantapp.model.OnDataListener;
 import com.group4.fooddelivery_merchantapp.model.Product;
 import com.group4.fooddelivery_merchantapp.model.ProductImage;
 import com.group4.fooddelivery_merchantapp.model.Regex;
 
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
+
 public class LoginActivity extends AppCompatActivity {
 
     FirebaseFirestore root;
     FirebaseAuth mAuth;
 
-    ProgressBar bar;
+    ProgressDialog progressDialog;
     TextView et_login;
     EditText et_email;
     EditText et_pass;
-
-    String MerchantID = "EOPPrOWpbfp2XCcjCQkT";
-
-    interface mCallBacks {
-        void getProductCallBack(Product p);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,101 +54,83 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void Init() {
+        progressDialog = new ProgressDialog(LoginActivity.this);
         et_email = findViewById(R.id.lg_et_email);
         et_pass = findViewById(R.id.lg_et_password);
         et_login = findViewById(R.id.lg_et_login);
-        bar = findViewById(R.id.lg_pb_bar);
         root = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         et_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (checkRequirements()) {
-//                    bar.setVisibility(View.VISIBLE);
-//                    bar.setIndeterminate(true);
-//                    //signInWithEmailAndPassword(et_email.getText().toString(), et_pass.getText().toString());
-//                    initProductData();
-//                }
-                bar.setVisibility(View.VISIBLE);
-                bar.setIndeterminate(true);
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                initProductData();
+                if (checkRequirements()) {
+                    progressDialog.setMessage(getString(R.string.login_in));
+                    progressDialog.show();
+                    signInWithEmailAndPassword(et_email.getText().toString(), et_pass.getText().toString());
+                }
             }
         });
     }
 
-    private void initProductData() {
-        root.collection("Product/")
+    private void checkMerchant(String email) {
+        root.collection("Merchant")
+                .whereEqualTo("Email", email)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            if (document == null) break;
-                            Product product = new Product();
-                            product.setID((String) document.getId());
-                            product.setName((String) document.get("Name"));
-                            product.setName_En(document.get("Name_En").toString());
-                            product.setStatus((String) document.get("Status"));
-                            product.setPrice((ArrayList<String>) document.get("Price"));
-                            product.setSize((ArrayList<String>) document.get("Size"));
-                            product.setMerchant(MerchantID);
-                            product.setRating((String) document.get("Rating"));
-                            product.setCreate(document.get("Create").toString());
-                            getImageList(product, new mCallBacks() {
-                                @Override
-                                public void getProductCallBack(Product p) {
-                                    WelcomeActivity.firebase.productList.add(product);
-                                }
-                            });
+                        if (queryDocumentSnapshots.size() != 0) {
+                            WelcomeActivity.firebase.merchant.setId(queryDocumentSnapshots.getDocuments().get(0).getId());;
+                            initProductData();
+                        } else {
+                            Toasty.error(LoginActivity.this, getString(R.string.account_invalid)).show();
                         }
-                        finishGetData();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toasty.error(LoginActivity.this, getString(R.string.account_invalid)).show();
+                        Log.e("LOGIN", e.getMessage());
                     }
                 });
     }
 
-    private void getImageList(Product product, final mCallBacks callBacks) {
-        ArrayList<ProductImage> images = new ArrayList<ProductImage>();
-        root.collection("Product/" + product.getID() + "/Photos/")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            ProductImage img = new ProductImage();
-                            Log.e("Firebasse", "img" + document.getId());
-                            if (document == null)
-                                break;
-                            img.setUri(document.get("Image_Link").toString());
-                            img.setId(document.getId());
-                            images.add(img);
-                        }
-                        product.setImage(images);
-                        WelcomeActivity.firebase.productList.add(product);
-                        callBacks.getProductCallBack(product);
-                    }
-                });
+    private void initProductData() {
+        WelcomeActivity.firebase.initProductData(new OnDataListener() {
+            @Override
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loading_data));
+            }
+
+            @Override
+            public void onSuccess() {
+                progressDialog.dismiss();
+                navigateToMain();
+            }
+        });
     }
 
     private void signInWithEmailAndPassword(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            initProductData();
-                        } else {
-                            bar.setVisibility(View.INVISIBLE);;
-                            Toast.makeText(LoginActivity.this, getResources().getString(R.string.email_pass_not_correct),
-                                    Toast.LENGTH_LONG).show();
-                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        }
+                    public void onSuccess(AuthResult authResult) {
+                        checkMerchant(authResult.getUser().getEmail());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toasty.error(LoginActivity.this, getResources().getString(R.string.email_pass_not_correct),
+                                Toast.LENGTH_LONG).show();
+                        Log.e("LOGIN", e.getMessage());
                     }
                 });
     }
 
-    private void finishGetData() {
+    private void navigateToMain() {
         Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(mainActivity);
         finish();

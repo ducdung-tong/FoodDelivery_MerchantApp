@@ -65,6 +65,10 @@
     <string name="deliver_order">Giao hàng</string>
     <string name="order_success">Thành công</string>
     <string name="moved_order_next_state">Thay đổi trạng thái đơn hàng thành công!</string>
+    <string name="login_in">Đang đăng nhập…</string>
+    <string name="loading_data">Đang tải dữ liệu…</string>
+    <string name="account_invalid">Tài khoản không hợp lệ!</string>
+    <string name="logout">Đăng xuất</string>
     <string-array name="type">
         <item>Thức uống</item>
         <item>Thức ăn</item>

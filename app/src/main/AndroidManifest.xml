@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activity.order.OrderDetailActivity"></activity>
+        <activity android:name=".activity.main.LoginActivity"/>
+        <activity android:name=".activity.order.OrderDetailActivity" />
         <activity android:name=".activity.order.SucceededOrderActivity" />
         <activity android:name=".activity.order.DeliveringOrderActivity" />
         <activity android:name=".activity.order.ConfirmedOrderActivity" />

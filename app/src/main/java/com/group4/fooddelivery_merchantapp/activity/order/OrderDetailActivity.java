@@ -129,7 +129,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                     public void onSuccess() {
                         Toasty.normal(OrderDetailActivity.this, getString(R.string.moved_order_next_state), Toasty.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(OrderDetailActivity.this, MainActivity.class);
+                        Intent intent = new Intent(OrderDetailActivity.this, OrderActivity.class);
                         startActivity(intent);
                         finishAffinity();
                     }

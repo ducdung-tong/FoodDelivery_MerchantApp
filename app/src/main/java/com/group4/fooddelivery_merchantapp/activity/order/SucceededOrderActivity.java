@@ -41,6 +41,12 @@ public class SucceededOrderActivity extends AppCompatActivity {
 
         if (succeededOrderList.size() == 0)
             textViewNoNews.setVisibility(View.VISIBLE);
+    }
+
+    private void initView() {
+        buttonBack = findViewById(R.id.btn_back);
+        recyclerViewSucceededOrder = findViewById(R.id.recyclerview_order);
+        textViewNoNews = findViewById(R.id.tv_no_data);
 
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,11 +54,5 @@ public class SucceededOrderActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-    }
-
-    private void initView() {
-        buttonBack = findViewById(R.id.btn_back);
-        recyclerViewSucceededOrder = findViewById(R.id.recyclerview_order);
-        textViewNoNews = findViewById(R.id.tv_no_data);
     }
 }

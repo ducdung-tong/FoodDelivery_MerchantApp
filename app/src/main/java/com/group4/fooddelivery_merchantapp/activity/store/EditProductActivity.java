@@ -282,8 +282,6 @@ public class EditProductActivity extends AppCompatActivity {
         info.put("Name", et_name.getText().toString());
         info.put("Name_En", et_name_en.getText().toString());
         info.put("Rating", product.getRating());
-        info.put("Sales", product.getPrice());
-        info.put("Status", "Còn hàng");
         info.put("Merchant", "Merchant/" + product.getMerchant());
         info.put("Create", new Date().toString());
         String[] prices = et_price.getText().toString().split("\\s*,\\s*");
@@ -412,7 +410,7 @@ public class EditProductActivity extends AppCompatActivity {
     }
 
     private void uploadImage(ProductImage p) {
-        StorageReference fileRef = storage.child("ProductImage/" + WelcomeActivity.firebase.merchantId
+        StorageReference fileRef = storage.child("ProductImage/" + WelcomeActivity.firebase.merchant.getId()
                 + "/" + product.getID() + "/" + p.getId());
         fileRef.putFile(Uri.parse(p.getUri())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

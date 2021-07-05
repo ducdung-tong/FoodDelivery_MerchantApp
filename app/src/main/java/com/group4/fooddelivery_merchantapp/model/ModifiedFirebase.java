@@ -154,7 +154,7 @@ public class ModifiedFirebase {
                                 confirmedList.add(order);
                             if (order.getStatus().equals("Delivering"))
                                 deliveringList.add(order);
-                            if (order.getStatus().equals("Succeeded"))
+                            if (order.getStatus().equals("Succeeded") || order.getStatus().equals("Canceled"))
                                 succeededList.add(order);
                         }
                         orderList.add(pendingList);
@@ -209,7 +209,7 @@ public class ModifiedFirebase {
                                     orderList.get(1).add(order);
                                 if (order.getStatus().equals("Delivering"))
                                     orderList.get(2).add(order);
-                                if (order.getStatus().equals("Succeeded"))
+                                if (order.getStatus().equals("Succeeded") || order.getStatus().equals("Canceled"))
                                     orderList.get(3).add(order);
                             }
 

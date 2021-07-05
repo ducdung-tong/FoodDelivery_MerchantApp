@@ -23,7 +23,7 @@ import es.dmoral.toasty.Toasty;
 
 public class OrderDetailActivity extends AppCompatActivity {
 
-    Button buttonNextState;
+    Button buttonNextState, buttonCancelState;
     ImageButton buttonBack;
     static RecyclerView recyclerViewItems;
     TextView textViewUserName, textViewUserPhoneNumber, textViewUserAddress, textViewTime, textViewSubTotal, textViewDiscount,
@@ -45,6 +45,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     private void initView() {
         buttonBack = findViewById(R.id.btn_back);
         buttonNextState = findViewById(R.id.btn_next_state);
+        buttonCancelState = findViewById(R.id.btn_cancel_state);
         textViewUserName = findViewById(R.id.tv_user_name);
         textViewUserPhoneNumber = findViewById(R.id.tv_user_phone_number);
         textViewUserAddress = findViewById(R.id.tv_user_address);
@@ -77,9 +78,11 @@ public class OrderDetailActivity extends AppCompatActivity {
         }
         if (orderType == 2) {
             buttonNextState.setText(getString(R.string.order_success));
+            buttonCancelState.setVisibility(View.VISIBLE);
         }
         if (orderType == 3) {
             buttonNextState.setVisibility(View.INVISIBLE);
+
         }
         orderList = orderType;
         orderIndex = indexInList;
@@ -105,6 +108,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void forwardOrderToNextState() {
+        //Normal process
         buttonNextState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,5 +140,29 @@ public class OrderDetailActivity extends AppCompatActivity {
                 });
             }
         });
+
+        //Cancel process
+        if (buttonCancelState.getVisibility() == View.VISIBLE) {
+            buttonCancelState.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WelcomeActivity.firebase.setOrderStatus(order, "Canceled", new OnDataListener() {
+                        @Override
+                        public void onStart() {
+
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            Toasty.normal(OrderDetailActivity.this, getString(R.string.moved_order_next_state), Toasty.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(OrderDetailActivity.this, OrderActivity.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }
+                    });
+                }
+            });
+        }
     }
 }

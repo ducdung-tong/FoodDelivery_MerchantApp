@@ -26,7 +26,7 @@ public class DeliveringOrderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pending_order);
+        setContentView(R.layout.activity_delivering_order);
 
         initView();
         initRecyclerViewAndAdapter();

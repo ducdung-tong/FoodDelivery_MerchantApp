@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/primaryColor"
-    tools:context=".activity.order.SucceededOrderActivity">
+    tools:context=".activity.order.OrderHistoryActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:textAllCaps="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/succeeded_order"
+            android:text="@string/order_history"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_centerVertical="true"

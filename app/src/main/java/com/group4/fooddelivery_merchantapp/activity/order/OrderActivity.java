@@ -115,7 +115,7 @@ public class OrderActivity extends AppCompatActivity {
         succeededOrderSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(OrderActivity.this, SucceededOrderActivity.class);
+                Intent intent = new Intent(OrderActivity.this, OrderHistoryActivity.class);
                 startActivity(intent);
             }
         });

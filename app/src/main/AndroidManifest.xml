@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".activity.main.LoginActivity"/>
         <activity android:name=".activity.order.OrderDetailActivity" />
-        <activity android:name=".activity.order.SucceededOrderActivity" />
+        <activity android:name=".activity.order.OrderHistoryActivity" />
         <activity android:name=".activity.order.DeliveringOrderActivity" />
         <activity android:name=".activity.order.ConfirmedOrderActivity" />
         <activity android:name=".activity.order.PendingOrderActivity" />

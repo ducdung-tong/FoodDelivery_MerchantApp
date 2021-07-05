@@ -50,6 +50,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.tv_user_name.setText(order.getUserName());
         holder.tv_user_phone_number.setText(order.getUserPhoneNumber());
         holder.tv_order_time.setText(order.getTime());
+        holder.tv_status.setText(changeStatusToVietnamese(order.getStatus()));
         holder.tv_total_amount.setText(String.format("%d đ", order.getTmpPrice()));
         holder.tv_total_items.setText(String.format("%d %s", order.getListOrderItems().size(), context.getString(R.string.items)));
         holder.cardViewOrder.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +64,18 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         });
     }
 
+    private String changeStatusToVietnamese(String status) {
+        if (status.equals("Pending"))
+            return "Đang chờ";
+        if (status.equals("Confirmed"))
+            return "Đã nhận";
+        if (status.equals("Delivering"))
+            return "Đang giao";
+        if (status.equals("Succeeded"))
+            return "Thành công";
+        return "Hủy/ Thất bại";
+    }
+
     @Override
     public int getItemCount() {
         return orderList != null ? orderList.size() : 0;
@@ -70,7 +83,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     public static final class OrderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_user_name, tv_user_phone_number, tv_total_amount, tv_total_items, tv_order_time, tv_detail;
+        TextView tv_user_name, tv_user_phone_number, tv_total_amount, tv_total_items, tv_order_time, tv_detail, tv_status;
         CardView cardViewOrder;
 
         public OrderViewHolder(@NonNull View itemView) {
@@ -81,6 +94,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             tv_total_amount = itemView.findViewById(R.id.tv_total_amount);
             tv_total_items = itemView.findViewById(R.id.tv_total_items);
             tv_order_time = itemView.findViewById(R.id.tv_order_time);
+            tv_status = itemView.findViewById(R.id.tv_order_status);
             cardViewOrder = itemView.findViewById(R.id.cardview_order);
         }
     }

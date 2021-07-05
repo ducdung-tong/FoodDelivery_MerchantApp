@@ -76,5 +76,15 @@
             android:layout_marginTop="10dp"
             android:layout_below="@+id/tv_total_items"
             android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:id="@+id/tv_order_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tv_order_time"/>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

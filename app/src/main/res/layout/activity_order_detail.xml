@@ -285,17 +285,29 @@
                     </RelativeLayout>
                 </LinearLayout>
 
-                //Button forward next state
-                <Button
-                    android:id="@+id/btn_next_state"
-                    android:layout_width="200dp"
-                    android:layout_height="60dp"
-                    android:text="@string/order"
-                    android:textSize="18sp"
-                    android:layout_marginTop="30dp"
-                    android:layout_gravity="center_horizontal"
-                    android:outlineSpotShadowColor="@color/white"
-                    android:backgroundTint="@color/light_red"/>
+            //Button forward next state
+            <Button
+                android:id="@+id/btn_next_state"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:text="@string/order"
+                android:textSize="18sp"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center_horizontal"
+                android:outlineSpotShadowColor="@color/white"
+                android:backgroundTint="@color/light_red"/>
+
+            <Button
+                android:id="@+id/btn_cancel_state"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:text="@string/cancel_order"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:outlineSpotShadowColor="@color/white"
+                android:backgroundTint="@color/light_red"
+                android:visibility="gone"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

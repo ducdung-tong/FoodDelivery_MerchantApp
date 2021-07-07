@@ -185,7 +185,7 @@ public class AddProductActivity extends AppCompatActivity {
         info.put("Rating", "0");
         info.put("Sales", "0");
         info.put("Status", "In_Stock");
-        info.put("Merchant", "Merchant/EOPPrOWpbfp2XCcjCQkT");
+        info.put("Merchant", "Merchant/" + WelcomeActivity.firebase.getMerchantId());
         info.put("Create", new Date().toString());
         String[] prices = et_price.getText().toString().split("\\s*,\\s*");
         String[] sizes = et_size.getText().toString().split("\\s*,\\s*");

@@ -61,7 +61,7 @@
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/main_tv_name"
                     app:layout_constraintTop_toTopOf="@+id/main_tv_hello"
-                    app:srcCompat="@drawable/logo"/>
+                    app:srcCompat="@mipmap/app_logo"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

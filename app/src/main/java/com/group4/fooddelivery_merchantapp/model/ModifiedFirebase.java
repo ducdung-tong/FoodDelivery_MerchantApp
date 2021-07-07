@@ -1,5 +1,6 @@
 package com.group4.fooddelivery_merchantapp.model;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.util.Log;
 
@@ -17,7 +18,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -259,6 +263,51 @@ public class ModifiedFirebase {
                 .document(order.orderID)
                 .update("status", status);
         listener.onSuccess();
+    }
+
+    public void addOrderUpdateNotification(String userId, String orderId, String status) {
+        MyNotification notification = new MyNotification();
+        //Set vietnamese content
+        notification.setTitle_vn("Cập nhật đơn hàng");
+        notification.setTitle_en("Update order");
+        if (status.equals("Confirmed")) {
+            notification.setDesc_en("Order "+ orderId + " has been confirmed. The merchant will deliver to you soon!");
+            notification.setDesc_vn("Đơn hàng " + orderId + " của bạn đã được xác nhận. Người bán sẽ sớm giao ngay cho bạn!");
+        }
+        if (status.equals("Delivering")) {
+            notification.setDesc_en("Order "+ orderId + " is being delivered. See you soon!");
+            notification.setDesc_vn("Đơn hàng " + orderId + " của bạn đang được vận chuyển. Chờ một chút nhé!");
+        }
+        if (status.equals("Succeeded")) {
+            notification.setDesc_en("Order "+ orderId + " has been successfully delivered. Remember to rate the products!");
+            notification.setDesc_vn("Đơn hàng " + orderId + " đã giao thành công. Đừng quên đánh giá sản phẩm nhé!");
+        }
+        if (status.equals("Canceled")) {
+            notification.setDesc_en("Order "+ orderId + " has been canceled or failed to deliver");
+            notification.setDesc_vn("Đơn hàng " + orderId + " đã bị hủy hoặc giao thất bại!");
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        String time = format.format(Calendar.getInstance().getTime()).toString();
+
+        notification.setTime(time);
+        Map<String, String> noti = new HashMap<>();
+        noti.put("Title_Vn", notification.getTitle_vn());
+        noti.put("Detail_Vn", notification.getDesc_vn());
+        noti.put("Title_En", notification.getTitle_en());
+        noti.put("Detail_En", notification.getDesc_en());
+        noti.put("Date", notification.getTime());
+        noti.put("Status", "false");
+        root.collection("User/" + userId + "/Notification/")
+                .document()
+                .set(noti)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                });
     }
 
     private Product getProductById(String productId) {

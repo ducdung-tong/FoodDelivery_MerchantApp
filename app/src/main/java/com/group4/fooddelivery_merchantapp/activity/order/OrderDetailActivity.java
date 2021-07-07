@@ -123,6 +123,8 @@ public class OrderDetailActivity extends AppCompatActivity {
                     nextStatus = "Succeeded";
                 }
 
+                WelcomeActivity.firebase.addOrderUpdateNotification(order.getUserID(), order.getOrderID(), nextStatus);
+
                 WelcomeActivity.firebase.setOrderStatus(order, nextStatus, new OnDataListener() {
                     @Override
                     public void onStart() {
@@ -146,6 +148,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             buttonCancelState.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    WelcomeActivity.firebase.addOrderUpdateNotification(order.getUserID(), order.getOrderID(),"Canceled");
                     WelcomeActivity.firebase.setOrderStatus(order, "Canceled", new OnDataListener() {
                         @Override
                         public void onStart() {
